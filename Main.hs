@@ -11,6 +11,10 @@ import Data.ByteString(ByteString)
 import Data.ByteString.UTF8(fromString)
 import MimeTypes
 
+-----------------------------------------------------
+loeb x = fmap ($ loeb x) x -- Where the magic happens
+-----------------------------------------------------
+
 type Handler = [String] -> IO (Response ByteString)
 
 static :: FilePath -> Handler
