@@ -7,6 +7,9 @@
 body {
   font-family: sans-serif;
 }
+#spreadsheet {
+  cursor: default;
+}
 #spreadsheet td {
   width: 60px;
   height: 30px;
@@ -44,6 +47,9 @@ function highlight(elem) {
   var idParts = $(elem).attr('id').split('_');
   $('#formula_row').val(idParts[1]);
   $('#formula_col').val(idParts[2]);
+  $.getJSON('/formula?row='+idParts[1]+'&col='+idParts[2], function(data) {
+    $('#formula').val(data);
+  });
 }
 
 $(document).ready(function () {
@@ -58,6 +64,13 @@ $(document).ready(function () {
     }
     table.append(tr);
   }
+  $.getJSON('/eval', function(cells) {
+    var i = 0;
+    for(var y = 0; y < rows; y++) {
+      for(var x = 0; x < cols; x++)
+        $('#'+cellname(x, y)).text(cells[i++]);
+    }
+  });
 });
     </script>
   </head>

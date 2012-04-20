@@ -40,6 +40,14 @@ okResponse contentType body =
 jsonResponse :: JSON a => a -> Response ByteString
 jsonResponse = okResponse "application/json" . fromString . encode
 
+redirectResponse :: String -> Response ByteString
+redirectResponse loc =
+  Response { rspCode = (3,0,2),
+             rspReason = "Found",
+             rspHeaders = [Header HdrContentLength "0",
+                           Header HdrLocation loc],
+             rspBody = (fromString "") }
+
 static :: FilePath -> Handler a
 static path _ _ _ =
   do content <- B.readFile path
@@ -68,7 +76,7 @@ updateHandler :: Handler (IORef Sheet)
 updateHandler _ sheet req =
   do modifyIORef sheet (//[((row, col), formula)])
      readIORef sheet >>= print -- XXX
-     return $ okResponse "text/plain" (fromString "Hi")
+     return $ redirectResponse "http://localhost:8000/"
   where get = let query = parseSimpleQuery $ rqBody req
               in queryGet query
         row, col :: Int
