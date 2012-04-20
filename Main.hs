@@ -75,7 +75,6 @@ queryGet query x = toString $ fromJust $ lookup (fromString x) query
 updateHandler :: Handler (IORef Sheet)
 updateHandler _ sheet req =
   do modifyIORef sheet (//[((row, col), formula)])
-     readIORef sheet >>= print -- XXX
      return $ redirectResponse "http://localhost:8000/"
   where get = let query = parseSimpleQuery $ rqBody req
               in queryGet query
