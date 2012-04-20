@@ -7,9 +7,71 @@
 body {
   font-family: sans-serif;
 }
+#spreadsheet td {
+  width: 60px;
+  height: 30px;
+  border: 1px solid black;
+  text-align: center;
+}
+#spreadsheet td.highlighted {
+  background-color: #77c;
+}
+.formulabar {
+  font-family: monospace;
+  padding: 5px;
+}
+#formula {
+  height: 20px;
+  font-family: monospace;
+}
     </style>
+    <script type="text/javascript"
+      src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+var rows = 5, cols = 5;
+var selected = null;
+
+function cellname(x, y) { return 'cell_'+y+'_'+x; }
+
+function highlight(elem) {
+  if(selected != null) {
+    selected.removeClass("highlighted");
+  }
+  $(elem).addClass("highlighted");
+  selected = $(elem);
+  $('#formula').removeAttr('disabled');
+  $('#formula').val('');
+  var idParts = $(elem).attr('id').split('_');
+  $('#formula_row').val(idParts[1]);
+  $('#formula_col').val(idParts[2]);
+}
+
+$(document).ready(function () {
+  var table = $('#spreadsheet');
+  for(var y = 0; y < rows; y++) {
+    var tr = $('<tr></tr>');
+    for(var x = 0; x < cols; x++) {
+      var td = $('<td ' +
+                 'onclick="highlight(this)" ' +
+                 'id="'+cellname(x, y)+'"></td>');
+      tr.append(td);
+    }
+    table.append(tr);
+  }
+});
+    </script>
   </head>
   <body>
-  Hello, world!
+  <div class="formulabar">
+    <form action="#" method="post">
+      <strong>\sheet -&gt;&nbsp;</strong>
+      <input disabled="true" name="formula" id="formula" type="text" width="100" />
+      <input type="hidden" name="col" id="formula_col" />
+      <input type="hidden" name="row" id="formula_row" />
+      <input type="submit" value="Commit" />
+    </form>
+  </div>
+  <table id="spreadsheet">
+  </table>
   </body>
 </html>

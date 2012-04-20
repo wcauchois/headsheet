@@ -10,6 +10,7 @@ import qualified Data.ByteString as B
 import Data.ByteString(ByteString)
 import Data.ByteString.UTF8(fromString)
 import MimeTypes
+import Language.Haskell.Interpreter
 
 -----------------------------------------------------
 loeb x = fmap ($ loeb x) x -- Where the magic happens
