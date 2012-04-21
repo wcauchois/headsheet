@@ -24,6 +24,9 @@ loeb :: Functor f => f (f a -> a) -> f a
 loeb x = fmap ($ loeb x) x -- Where the magic happens
 -----------------------------------------------------
 
+rows, cols :: Int
+(rows, cols) = (5, 5)
+
 type Handler a = [String] -> a -> Request ByteString -> IO (Response ByteString)
 type Sheet = Array (Int, Int) String
 
@@ -127,5 +130,5 @@ httpd sheet addr url req =
             Nothing -> findRoute routes
 
 main :: IO ()
-main = do sheet <- newIORef (listArray ((0, 0), (4, 4)) $ repeat "0")
+main = do sheet <- newIORef (listArray ((0, 0), (rows-1, cols-1)) $ repeat "0")
           server (httpd sheet)
